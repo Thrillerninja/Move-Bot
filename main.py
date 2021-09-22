@@ -1,8 +1,10 @@
+
 import discord
 import os
 from discord.utils import get
-
+import requests
 client = discord.Client()
+
 
 global uvotes
 global dvotes
@@ -51,6 +53,9 @@ async def on_message(message):
     global bot
     global channels
     global author
+    global response
+    global category
+    global joke
 
     if str(message.channel) in channels:
         if message.content.startswith('?hello'):
@@ -63,6 +68,7 @@ async def on_message(message):
             )
             return
 
+
         if not message.content.startswith("?"):
             if str(message.author) in opfer:
                 await message.channel.purge(limit=1)
@@ -71,10 +77,29 @@ async def on_message(message):
                 return
             else:
                 return
-
+        if message.content.startswith("?joke"):
+          category = message.content.split(".")[1]
+          if category == "dark":
+            response = requests.get("https://v2.jokeapi.dev/joke/Dark")
+          if category == "programming":
+            response = requests.get("https://v2.jokeapi.dev/joke/Programming")
+          if category == "pun":
+            response = requests.get("https://v2.jokeapi.dev/joke/Pun")
+          if category == "spooky":
+            response = requests.get("https://v2.jokeapi.dev/joke/Spooky")  
+          else:
+            response = requests.get("https://v2.jokeapi.dev/joke/Any")
+          joke = response.json()
+          if joke["type"] == "single" :
+            await message.channel.send(joke["joke"])
+          else:  
+            await message.channel.send(joke["setup"])
+            await message.channel.send(joke["delivery"])
+            return
+        
         if message.content == "?help":
             await message.channel.send(
-                "Mögliche Befehle:\n?hello = Bot sagt Hallo\n?moven (Channel) = Moveanfrage für Channel (Channel muss angegeben werden)\n?MC_Menü = Anzeige des Aktuellen MCDonald Menüs\n"
+                "Mögliche Befehle:\n?hello = Bot sagt Hallo\n?moven (Channel) = Moveanfrage für Channel (Channel muss angegeben werden)\n?MC_Menü = Anzeige des Aktuellen MCDonald Menüs\n?joke.'category' = Bot gibt Witz aus bestimmter Kategorie aus\n  Mögliche Kategorien: any, dark, spooky, pun, programming "
             )
             return
 
