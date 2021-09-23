@@ -1,10 +1,9 @@
-
+import wikipedia
 import discord
 import os
 from discord.utils import get
 import requests
 client = discord.Client()
-
 
 global uvotes
 global dvotes
@@ -44,8 +43,7 @@ opfer = [
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
-
-
+    
 @client.event
 async def on_message(message):
     global keywords
@@ -67,7 +65,27 @@ async def on_message(message):
                 "https://www.mcdonalds.com/de/de-de/produkte/alle-produkte.html"
             )
             return
-
+        
+        if message.content.startswith("?wiki"):
+            subkey = message.content.split(".",1)
+            keyword = subkey[1].split(" ")
+            if keyword[0] == "rand":
+              page = wikipedia.random(pages=1)
+              embedVar = discord.Embed(title="Random Wiki Article", description="", color=0x00ff00)
+              embedVar.add_field(name=page, value=wikipedia.summary(title=page, chars=240, auto_suggest=True, redirect=True))
+              await message.channel.send(embed=embedVar)
+              return
+            elif keyword[0] == "search":           
+              page = wikipedia.search(keyword[1], results=1, suggestion=True)
+              embedVar = discord.Embed(title="Wiki Artikel", description="", color=0x00ff00)
+              embedVar.add_field(name=keyword[1], value=wikipedia.summary(title=page[0], chars=240, auto_suggest=True, redirect=True))
+              await message.channel.send(embed=embedVar)
+              return
+            elif str(keyword) == nil :              
+              await message.channel.send("nil")
+              return
+            return
+    
 
         if not message.content.startswith("?"):
             if str(message.author) in opfer:
@@ -98,10 +116,10 @@ async def on_message(message):
             return
         
         if message.content == "?help":
-            await message.channel.send(
-                "Mögliche Befehle:\n?hello = Bot sagt Hallo\n?moven (Channel) = Moveanfrage für Channel (Channel muss angegeben werden)\n?MC_Menü = Anzeige des Aktuellen MCDonald Menüs\n?joke.'category' = Bot gibt Witz aus bestimmter Kategorie aus\n  Mögliche Kategorien: any, dark, spooky, pun, programming "
-            )
-            return
+          embedVar = discord.Embed(title="Hilfe", description="", color=0x00ff00)
+          embedVar.add_field(name="Mögliche Befehle:", value="?hello = Bot sagt Hallo\n?moven (Channel) = Moveanfrage für Channel (Channel muss angegeben werden)\n?MC_Menü = Anzeige des Aktuellen MCDonald Menüs\n?joke.'category' = Bot gibt Witz aus bestimmter Kategorie aus\n  Mögliche Kategorien: any, dark, spooky, pun, programming\n  ?wiki.rand =Random Wikipedia Artikel\n  ?wiki.search 'seach' = sucht passenden Wikipedia Artikel")
+          await message.channel.send(embed=embedVar)
+          return
 
         if message.content.startswith('?move'):
             keyword = message.content.split(" ")[1]
@@ -231,3 +249,6 @@ async def on_raw_reaction_remove(payload):
 client.run(os.getenv('TOKEN'))
 
 #test2: https://replit.com/join/ezhjyupe-thrillerninja
+
+#https://www.mediawiki.org/wiki/API:Main_page
+#https://wikipedia.readthedocs.io/en/latest/code.html
