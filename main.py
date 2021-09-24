@@ -77,16 +77,12 @@ async def on_message(message):
               return
             elif keyword[0] == "search":           
               page = wikipedia.search(keyword[1], results=1, suggestion=True)
-              embedVar = discord.Embed(title="Wiki Artikel", description="", color=0x00ff00)
-              embedVar.add_field(name=keyword[1], value=wikipedia.summary(title=page[0], chars=240, auto_suggest=True, redirect=True))
+              embedVar = discord.Embed(title="Wiki Artikel", description="", color=0x00ff00, url="https://de.wikipedia.org/wiki/" + str(keyword[1]))
+              embedVar.add_field(name=keyword[1].capitalize(), value=wikipedia.summary(title=page[0], chars=240, auto_suggest=True, redirect=True))
               await message.channel.send(embed=embedVar)
-              return
-            elif str(keyword) == nil :              
-              await message.channel.send("nil")
               return
             return
     
-
         if not message.content.startswith("?"):
             if str(message.author) in opfer:
                 await message.channel.purge(limit=1)
@@ -138,7 +134,6 @@ async def on_message(message):
                 await channel.send("* " + (message.author.name) + " möchte gemoved werden in " + (keyword))
                 print(keywords[keyword2])
                 author = message.author
-
             else:
               await message.channel.send('Zielangabe fehlt')
 
@@ -155,7 +150,6 @@ async def on_message(message):
 
         def check(reaction, user):
             return user == message.author and str(reaction.emoji) == '👍'
-
 
 @client.event
 async def on_raw_reaction_add(payload):
