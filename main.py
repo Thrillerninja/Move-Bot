@@ -3,6 +3,8 @@ import discord
 import os
 from discord.utils import get
 import requests
+import random
+import pickle  #https://wiki.python.org/moin/UsingPickle
 client = discord.Client()
 
 global uvotes
@@ -12,6 +14,7 @@ global keyword2
 global bot
 global channels
 global author
+
 
 uvotes = 0
 dvotes = 0
@@ -37,13 +40,16 @@ channels = [
     "admin"
   ]
 opfer = [
-  "Cookie-Bot#2060", 
+  
   ]
+cancer_emote = ["Der Diamantkönig#4154"]
 
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
-    
+    wikipedia.set_lang("de")
+
+
 @client.event
 async def on_message(message):
     global keywords
@@ -54,34 +60,52 @@ async def on_message(message):
     global response
     global category
     global joke
+    global healthvalue
+    global standard_value
 
     if str(message.channel) in channels:
         if message.content.startswith('?hello'):
             await message.channel.send('Hello!')
             return
-
-        if message.content.startswith("?MC_Menü"):
-            await message.channel.send(
-                "https://www.mcdonalds.com/de/de-de/produkte/alle-produkte.html"
-            )
+        elif message.content.startswith("?MC_Menü"):
+            await message.channel.send("https://www.mcdonalds.com/de/de-de/produkte/alle-produkte.html")
             return
-        
-        if message.content.startswith("?wiki"):
+        elif message.content.startswith("?stats"):
+            await message.channel.send("https://statbot.net/dashboard/539102925402931230")
+            return        
+        elif message.content.startswith("?wiki"):
             subkey = message.content.split(".",1)
             keyword = subkey[1].split(" ")
             if keyword[0] == "rand":
               page = wikipedia.random(pages=1)
-              embedVar = discord.Embed(title="Random Wiki Article", description="", color=0x00ff00)
+              embedVar = discord.Embed(title="Random Wiki Article", description="", color=0x00ff00, url="https://de.wikipedia.org/wiki/" + str(page).title().replace(" ", "_"))
               embedVar.add_field(name=page, value=wikipedia.summary(title=page, chars=240, auto_suggest=True, redirect=True))
               await message.channel.send(embed=embedVar)
               return
+
             elif keyword[0] == "search":           
               page = wikipedia.search(keyword[1], results=1, suggestion=True)
-              embedVar = discord.Embed(title="Wiki Artikel", description="", color=0x00ff00, url="https://de.wikipedia.org/wiki/" + str(keyword[1]))
-              embedVar.add_field(name=keyword[1].capitalize(), value=wikipedia.summary(title=page[0], chars=240, auto_suggest=True, redirect=True))
+              embedVar = discord.Embed(title="Wiki Artikel", description="", color=0x00ff00, url="https://de.wikipedia.org/wiki/" + str(page[1]).title().replace(" ", "_"))
+              embedVar.add_field(name=page[1].title(), value=wikipedia.summary(title=page[0], chars=240, auto_suggest=True, redirect=True))
               await message.channel.send(embed=embedVar)
+              await message.channel.send(page[1].title())
+              await message.channel.send(str(page[1]))
               return
             return
+
+        #if str(message.author) in cancer_emote:
+         # await message.add_reaction('<:Krebs:899299521966784595>')     
+        if message.content.startswith("?health_status"):
+          healthvalue = random.random()
+          standard_value = 0.8
+          print(healthvalue)
+          if healthvalue >= standard_value:
+            await message.channel.send('<:Krebs:899299521966784595>') 
+          else:
+            await message.channel.send('<:Gesund:899299804281188415>')
+          return
+          
+
     
         if not message.content.startswith("?"):
             if str(message.author) in opfer:
@@ -113,7 +137,7 @@ async def on_message(message):
         
         if message.content == "?help":
           embedVar = discord.Embed(title="Hilfe", description="", color=0x00ff00)
-          embedVar.add_field(name="Mögliche Befehle:", value="?hello = Bot sagt Hallo\n?moven (Channel) = Moveanfrage für Channel (Channel muss angegeben werden)\n?MC_Menü = Anzeige des Aktuellen MCDonald Menüs\n?joke.'category' = Bot gibt Witz aus bestimmter Kategorie aus\n  Mögliche Kategorien: any, dark, spooky, pun, programming\n  ?wiki.rand =Random Wikipedia Artikel\n  ?wiki.search 'seach' = sucht passenden Wikipedia Artikel")
+          embedVar.add_field(name="Mögliche Befehle:", value="?hello = Bot sagt Hallo\n?moven (Channel) = Moveanfrage für Channel (Channel muss angegeben werden)\n?MC_Menü = Anzeige des Aktuellen MCDonald Menüs\n?joke.'category' = Bot gibt Witz aus bestimmter Kategorie aus\n  Mögliche Kategorien: any, dark, spooky, pun, programming\n  ?wiki.rand =Random Wikipedia Artikel\n  ?wiki.search 'seach' = sucht passenden Wikipedia Artikel\n?health_status = Find out if you have cancer")
           await message.channel.send(embed=embedVar)
           return
 
@@ -180,7 +204,7 @@ async def on_raw_reaction_add(payload):
 
     print("up/down:" + str(uvotes - dvotes))
 
-    
+    #hallo machts spaß?
     
     if uvotes - dvotes >= 1:
       global keyword2
@@ -246,3 +270,4 @@ client.run(os.getenv('TOKEN'))
 
 #https://www.mediawiki.org/wiki/API:Main_page
 #https://wikipedia.readthedocs.io/en/latest/code.html
+

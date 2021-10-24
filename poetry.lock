@@ -223,6 +223,17 @@ requests = "*"
 six = "*"
 
 [[package]]
+name = "pickle-data"
+version = "0.0.1"
+description = "A simple tool for pickling data to a file."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+dev = ["pytest (>=3.7)"]
+
+[[package]]
 name = "replit"
 version = "3.2.4"
 description = "A library for interacting with features of repl.it"
@@ -330,7 +341,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "7be8cc649bd338ed008dd8155b37eb9180bf9f3ea1c44787754f028666a6248e"
+content-hash = "249195c0d281df8e03830968e2ed746f313e369182646d817335f5438ad7b783"
 
 [metadata.files]
 aiohttp = [
@@ -533,6 +544,10 @@ multidict = [
 opus-seti = [
     {file = "opus-seti-0.4.2.tar.gz", hash = "sha256:46d9beab575811a7e5c6977561d7dfc7a3ada29eade62a9ff694991dd1263f9c"},
     {file = "opus_seti-0.4.2-py2.py3-none-any.whl", hash = "sha256:cb8ea1947d300556efdc806477909fa9fb48fe9c882e710a0121f21a8e01d908"},
+]
+pickle-data = [
+    {file = "pickle_data-0.0.1-py3-none-any.whl", hash = "sha256:f1718010d39e4e954620c744ab89d227ccd4ed6933136239618a55591cbebfa8"},
+    {file = "pickle_data-0.0.1.tar.gz", hash = "sha256:e3296f12835b1fbf2b96124345f13d99e4f7e93f27d4e45c131bca04d5919e91"},
 ]
 replit = [
     {file = "replit-3.2.4-py3-none-any.whl", hash = "sha256:4fa5895e1e090ba23c179641bc88ab0486d1bea696515aa3147fce55733e29e1"},
